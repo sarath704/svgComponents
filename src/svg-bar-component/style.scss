@@ -1,0 +1,23 @@
+$baseClass: "svg-bar-component";
+
+.svg-bar-component{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .cls-2{fill:url(#linear-gradient);}
+    .cls-3{opacity:0.75;fill:url(#linear-gradient-2);}
+    .cls-4{font-size:300%;fill:#fff;font-family:SegoeUI-Light, Segoe UI;}
+    .cls-5{font-size:23.59px;}
+    .cls-8{isolation:isolate;}
+    .cls-9{font-size:150%;fill:#e6e7e8;font-family:SegoeUI, Segoe UI;}
+    .chart-container{width:800px; height:540px;background:#f3f3f3; margin:50px;border:1px solid #ccc;}
+    
+    
+}
+
+section{
+    height: 500px;
+}
