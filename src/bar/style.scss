@@ -1,89 +1,64 @@
 @import url('https://fonts.googleapis.com/css?family=Oswald');
-//colors
-$color_gray: #a2a8b0;
-$white: #fff;
-$darkOrange: #e7562b;
-$orange: #ef6c23;
-//fonts
-$font: Oswald;
-//urls
-$url_0: url(#SVGID_1_);
-$url_1: url(#bar-height-info);
-$url_2: url(#SVGID_6_);
-$url_3: url(#SVGID_7_);
-.st0 {
-    fill: $color_gray;
-}
-.bg{fill:url(#bg);}
-.st1 {
-    opacity: .54;
-    fill: $url_0;
-}
-
-.st2 {
-    fill: $url_1;
-}
-
-.st6 {
-    fill: $white;
-}
-
-.st7 {
-    fill: $url_2;
-}
-
-.st8 {
-    fill: $url_3;
-}
-
-.st9 {
-    opacity: .15;
-    fill: $white;
-}
-
-.st10 {
-    font-family: $font;
-}
-
-.st11 {
-    font-size: 21.9842px;
-}
-
-.st12 {
-    fill: $darkOrange;
-}
-
-.st13 {
-    font-size: 29.7202px;
-}
-
-.st14 {
-    font-size: 13.0868px;
-}
-
-.st15 {
-    fill: $darkOrange;
-}
-
-.st17 {
-    font-size: 6.3439px;
-}
-
-.st18 {
-    font-size: 5.3158px;
-}
-
-.st19 {
-    font-size: 2.4647px;
-}
-
-.st20 {
-    fill: $orange;
-}
-
+bg{fill:url(#bg);}
+      .bar-shadow{ fill:url(#bar-drop-shadow);}
+      .cls-color-white{fill: #FFFFFF;}
+      .cls-orange{fill: #EC572A;}
+      .cls-8 {fill: url(#SVGID_6_);}
+      .cls-content {
+          fill: #969696;
+          font-family: 'MyriadPro-Regular';
+          font-size: 4px;
+      }
+      .cls-4 {
+          fill: url(#SVGID_3_);
+      }
+      .cls-5 {
+          fill: url(#SVGID_4_);
+      }
+      .cls-6 {
+          fill: url(#SVGID_5_);
+      }
+      .cls-percentage {
+          fill: #F1F2F2;
+          font-family: 'DFGothic-EB-WIN-RKSJ-H';
+          font-size: 34.6972px;
+      }
+      .cls-percentage-ind{
+        fill: #F1F2F2;
+          font-family: 'DFGothic-EB-WIN-RKSJ-H';
+          font-size: 24.6972px;
+      }
+      .cls-opacity-04 {
+          opacity: 0.4;
+      }
+      .cls-color-lite {
+          fill: #F1F2F2;
+      }
+      .cls-infographic {
+          font-family: 'Utsaah';
+          font-size: 22.1111px;
+      }
+      .cls-info-orange {
+          fill: #F27026;
+      }
+      .cls-11 {
+          fill: url(#SVGID_8_);
+      }
+      .cls-12 {
+          overflow: visible;
+          opacity: 0.8;
+      }
+      .cls-13 {
+          fill: #EF5B2C;
+      }
+      .cls-14 {
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-miterlimit: 10;
+        }
 g,
 rect,
-linearGradient {
+linearGradient,path {
     -webkit-transition: all 0.7s ease-in-out;
     -moz-transition: all 0.7s ease-in-out;
     transition: all 0.7s ease-in-out;
