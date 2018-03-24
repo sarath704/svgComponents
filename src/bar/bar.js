@@ -8,11 +8,12 @@ class Bar extends React.Component {
 
         this.state = {
             stops: [],
-            config: {}
+            config: {},
+            arrowHeight:30
         }
     }
     getDynamicHeight(dataValue) {
-        const value = dataValue * 2.32;
+        const value = dataValue * 2.319;
         return dataValue > 20
             ? {
                 value,
@@ -24,18 +25,13 @@ class Bar extends React.Component {
             };
     }
 
-    arrowsCount(bar) {
-        if (bar > 80) {
-            return 5;
-        } else if (bar > 60 && bar <= 80) {
-            return 4;
-        } else if (bar > 40 && bar <= 60) {
-            return 3;
-        } else if (bar > 20 && bar <= 40) {
-            return 2;
-        } else {
-            return 1;
-        }
+    arrowsCount(value) {
+        const gutters= 10;
+        const availableHeight= this.getDynamicHeight(value);
+        const spaceBetweenArrows = 3;
+        const arrowHeight = this.state.arrowHeight;
+        
+        return Math.floor(availableHeight.value-gutters)/(arrowHeight+spaceBetweenArrows);
     }
 
     render() {
@@ -48,7 +44,8 @@ class Bar extends React.Component {
         const data_bg_color = this.props.data_bg_color;
         const shadowColor = this.props.shadowColor;
         const upArrowsCount = this.arrowsCount(bar);
-        const arrowHeight = 30;
+        const spaceBetweenArrows= 3;
+        const arrowHeight = 30+spaceBetweenArrows;
         const primaryColor = this.props.primaryColor || "#ef5b2c";
         return (
             <g className="bar" transform={`translate(${ 200 * index}, 0)`} key={index}>
@@ -88,9 +85,13 @@ class Bar extends React.Component {
                 </linearGradient>
 
                 <g className="bar-shadows">
+                    {/* <path
+                        fill={`url(#bar-drop-shadow-${index})`}
+                        d={`M127.584 ${837.094-targetHeight.diff}l167.944 ${53.332} 23-507.333-49.057-35z`}/> */}
                     <path
                         fill={`url(#bar-drop-shadow-${index})`}
-                        d={`M127.584 ${ 837.094 - targetHeight.diff}l167.944 53.332 23-507.333-49.057-35z`}/>
+                        d={`m127.584,837.119l167.944,53.332l23,-${507.333+targetHeight.diff}l-49.057,-35l-141.887,${489.001+targetHeight.diff}z`}/>
+                        
                     <path
                         fill={`url(#bar-drop-shadow-bottom-${index})`}
                         d={`M199.9 ${834.094}l-73.5 2.5 74 23 70-22.5z`}/>
@@ -102,9 +103,7 @@ class Bar extends React.Component {
                     <path
                         className="cls-color-white"
                         d="M127.584 348.093c-5.002 0-9.057 4.048-9.057 9.04v289.294h79.938V348.093h-70.881z"/>
-                    <path
-                        // className="cls-orange"
-                       fill={primaryColor} d="M142.895 363.031c-6.341 0-11.481 5.061-11.481 11.303v30.644c0 6.243 5.14 11.303 11.481 11.303s11.481-5.061 11.481-11.303v-30.644c-.001-6.243-5.141-11.303-11.481-11.303zm8.144 39.669c0 5.315-3.646 9.623-8.145 9.623s-8.145-4.308-8.145-9.623v-26.088c0-5.314 3.646-9.623 8.145-9.623s8.145 4.308 8.145 9.623V402.7zM172.035 364.455v51.826h-4.779l.286-45.479-7.521 4.417-1.063-3 8.912-7.764h4.165z"/>
+                    <text   transform="matrix(.8386 0 0 1 130.502 410.6304)" className="bar-index" fill={primaryColor}>0{index+1}</text>
                     <path
                         d="M278.528 357.133c0-4.992-4.055-9.04-9.057-9.04h-71.005v298.334h80.062V357.133z"
                         fill="url(#SVGID_6_)"/>
@@ -169,14 +168,14 @@ class Bar extends React.Component {
                     <text
                         transform="matrix(.695 0 0 1 131.01 693.791)"
                         fill="#f1f2f2"
-                        fontFamily="DFGothic-EB-WIN-RKSJ-H"
+                        fontFamily="Oswald"
                         fontSize={34.697}>
                         {bar}
                     </text>
                     <text
-                        transform="matrix(.695 0 0 1 155.01 693.791)"
+                        transform="matrix(.695 0 0 1 158.01 693.791)"
                         fill="#f1f2f2"
-                        fontFamily="DFGothic-EB-WIN-RKSJ-H"
+                        fontFamily="Oswald"
                         fontSize={24.697}>
                         %
                     </text>
