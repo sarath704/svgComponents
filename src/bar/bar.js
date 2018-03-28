@@ -1,6 +1,5 @@
 import React from "react";
 import Text from "../shared/text";
-import LinearGradient from "../shared/linearGradient";
 class Bar extends React.Component {
 
     constructor(props) {
@@ -13,7 +12,9 @@ class Bar extends React.Component {
         }
     }
     getDynamicHeight(dataValue) {
-        const value = dataValue * 2.319;
+        const value = dataValue * 2.319; // Initial height 58px for 25% ; 58/25 = 2.319 
+
+        // Value is generated value based on bar count  , diff is difference between initial and gen
         return dataValue > 20
             ? {
                 value,
@@ -116,7 +117,7 @@ class Bar extends React.Component {
                         y={0}
                         className="cls-head-text" fill={primaryColor}
                         style={{
-                        fontSize: '14'
+                        fontSize: '14px'
                     }}
                         width={text_width}>
                         {barTitle}
@@ -127,7 +128,7 @@ class Bar extends React.Component {
                         x={0}
                         y={0}
                         style={{
-                        fontSize: '4'
+                        fontSize: '4px'
                     }}
                         width={65}>
 
@@ -179,10 +180,8 @@ class Bar extends React.Component {
                         fontSize={24.697}>
                         %
                     </text>
-
-                    {Array.from({
-                        length: upArrowsCount
-                    }, (v, ind) => (
+                    
+                    {[...Array(Math.floor(upArrowsCount))].map((v, ind) => (
                         <g className="up" key={ind}>
                             <circle
                                 className="cls-color-lite"

@@ -1,6 +1,5 @@
 import React from "react";
 import "./style.scss";
-
 import Bar from "./bar";
 import BarJsonData from "./data.json"
 
@@ -32,7 +31,9 @@ class SvgBarComponent extends React.Component {
 
   componentWillMount() {
     this.setMax();
-    this.state.barData=BarJsonData;
+    this.setState({
+      barData:BarJsonData
+    })
   }
 
   setMax() {
@@ -57,7 +58,7 @@ class SvgBarComponent extends React.Component {
       }
     ]
   }
-  
+
   randomValues(a, pCount = 4, pMin = 20, pMax = 99) {
     let min = pMin < pMax
       ? pMin
@@ -68,10 +69,9 @@ class SvgBarComponent extends React.Component {
     let resultArr = [],
       randNumber;
       let barData=this.state.barData;
-      debugger;
     while (pCount > 0) {
       randNumber = Math.round(min + Math.random() * (max - min));
-      if (resultArr.indexOf(randNumber) == -1) {
+      if (resultArr.indexOf(randNumber) === -1) {
         resultArr.push(randNumber);
         barData[pCount-1].value=randNumber;
         pCount--;
@@ -92,13 +92,21 @@ class SvgBarComponent extends React.Component {
 
     // For demo
     let randomValues = randomValues;
+    //  Ie 11 check 
+    const isIE = (!!window.MSInputMethodContext && !!document.documentMode) || navigator.appVersion.indexOf("MSIE 10") !== -1 || navigator.appVersion.indexOf("MSIE 9.") !== -1;
 
+    //  Svg related
+    const preserveAspectRatio = isIE?"none" : "xMinYMin";
+    const width  = !isIE?"100%" : 800;
+    const height = !isIE?"100%" : 800;
     return (
 
       <svg
         id="Layer_1"
-        width={`100%`}
+        width={width}
+        height={height}
         viewBox="0 0 1024 1024"
+        preserveAspectRatio = {preserveAspectRatio}
         xmlns="http://www.w3.org/2000/svg">
         <defs>
 
