@@ -1,0 +1,46 @@
+[
+    {
+        "value": 21,
+        "primaryColor": "#ED5E29",
+        "data_bg_color": [
+            "#ED5E29",
+            "#F9CD29"
+        ],
+        "icon": "",
+        "title": "TEXT HERE",
+        "description": "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and type setting  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the ..."
+    },
+    {
+        "value": 50,
+        "primaryColor": "#A0248C",
+        "data_bg_color": [
+            "#A0248C",
+            "#E664A4"
+        ],
+        "icon": "",
+        "title": "TEXT HERE",
+        "description": "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and type setting  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the ..."
+    },
+    {
+        "value": 55,
+        "primaryColor": "#6C54A2",
+        "data_bg_color": [
+            "#6C54A2",
+            "#7E62AB"
+        ],
+        "icon": "",
+        "title": "TEXT HERE",
+        "description": "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and type setting  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the ..."
+    },
+    {
+        "value": 70,
+        "primaryColor": "#30ACAE",
+        "data_bg_color": [
+            "#30ACAE",
+            "#4AAEE0"
+        ],
+        "icon": "",
+        "title": "TEXT HERE",
+        "description": "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and type setting  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the ..."
+    }
+]
