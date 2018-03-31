@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './App.scss';
 import SvgCard from "./svg-bar-component/index";
 import SvgBarComponent from "./bar/barContainer";
-import HourGlassComponent from "./hourglass/HourGlassContainer"
+import HourGlassComponent from "./hourglass/HourGlassContainer";
+
 
 class App extends Component {
   render() {

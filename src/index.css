@@ -1,5 +1,133 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.st1 {
+    fill: #FFFFFF;
+}
+
+.st1 {
+    fill: #FFFFFF;
+}
+
+.App,
+.bar-container {
+    text-align: center;
+    max-width: 800px;
+    margin: 0px auto;
+    width: 100%;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+.bar-index {
+    font-family: 'Oswald';
+    font-size: 50px;
+}
+
+.bg {
+    fill: url(#bg);
+}
+
+.bar-shadow {
+    fill: url(#bar-drop-shadow);
+}
+
+.cls-color-white {
+    fill: #FFFFFF;
+}
+
+.cls-orange {
+    fill: #EC572A;
+}
+
+.cls-8 {
+    fill: url(#SVGID_6_);
+}
+
+.cls-content {
+    fill: #969696;
+    font-family: 'MyriadPro-Regular';
+    font-size: 4px;
+}
+
+.cls-4 {
+    fill: url(#SVGID_3_);
+}
+
+.cls-5 {
+    fill: url(#SVGID_4_);
+}
+
+.cls-6 {
+    fill: url(#SVGID_5_);
+}
+
+.cls-percentage {
+    fill: #F1F2F2;
+    font-family: 'DFGothic-EB-WIN-RKSJ-H';
+    font-size: 34.6972px;
+}
+
+.cls-percentage-ind {
+    fill: #F1F2F2;
+    font-family: 'DFGothic-EB-WIN-RKSJ-H';
+    font-size: 24.6972px;
+}
+
+.cls-opacity-04 {
+    opacity: 0.4;
+}
+
+.cls-color-lite {
+    fill: #F1F2F2;
+}
+
+.cls-infographic {
+    font-family: 'Utsaah';
+    font-size: 22.1111px;
+}
+
+.cls-info-orange {
+    fill: #F27026;
+}
+
+.cls-11 {
+    fill: url(#SVGID_8_);
+}
+
+.cls-12 {
+    overflow: visible;
+    opacity: 0.8;
+}
+
+.cls-13 {
+    fill: #EF5B2C;
+}
+
+.cls-14 {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-miterlimit: 10;
+}
+
+g,
+rect,
+linearGradient,
+path {
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+}
+
+button {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    background: #e7562b;
+    border: 1px solid #e7562b;
+    color: #fff;
+    cursor: pointer;
 }

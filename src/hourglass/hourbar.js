@@ -3,27 +3,39 @@ import Text from "../shared/text";
 class Hourbar extends React.Component {
 
     getDynamicHeight(dataValue) {
-        const barHeight = Math.max(20, dataValue);
-        const filled = barHeight * 0.8; // Total height of one glass is 80px; 80/100 = 0.8
-        const left = (100 - barHeight) * 0.8;
+        const totalContainerHeight = 76.9;
+        let filler_connecting_curve_height = 10.8;
+        const barHeight = Math.max(0, dataValue);
+        let showFillers = 1;
+        
+        const filled = barHeight * 0.6; // Total height of one glass is 80px; 80/100 = 0.8
+        const left = (100 - barHeight) * 0.6;
         // Value is generated value based on bar count  , diff is difference between
         // initial and gen
-        const filler_connecting_curve_height = 10.8;
-        const gradientFiller = Math.max((80 - filler_connecting_curve_height - filled), 0);
-        return {filled, left, gradientFiller};
+        if (barHeight == 0 || barHeight ==100) {
+            filler_connecting_curve_height = 0;
+            showFillers = 0;
+        }
+
+
+        const gradientFiller = totalContainerHeight - filled;
+        const rectHieght =  totalContainerHeight - filled - filler_connecting_curve_height+2;
+        const curverStartPosition = gradientFiller-filler_connecting_curve_height;
+        return {filled, left, gradientFiller,showFillers,rectHieght,curverStartPosition};
     }
 
     render() {
-        const barValue = this.props.barValue || 30;
+        const barValue = this.props.barValue || 25;
         const dyData = this.getDynamicHeight(barValue);
+        console.log(dyData);
         const primaryColor = this.props.primaryColor || "#ED5E29";
         const text_width = this.props.text_width || 200;
-        const index= this.props.index;
-        
+        const index = this.props.index;
+
         const data_bg_color = this.props.data_bg_color;
         return (
 
-            <g id="hourBar" transform={`translate(${index*80},0)`}>
+            <g id="hourBar" transform={`translate(${index * 80},0)`}>
                 <filter id="AI_GaussianBlur_3">
                     <feGaussianBlur stdDeviation={3}/>
                 </filter>
@@ -51,8 +63,8 @@ class Hourbar extends React.Component {
                         transform="matrix(.9445 0 0 1 41.589 73.495)"
                         className="st8"
                         fontSize={30.534}
-                        fill={primaryColor||"#ef5c27"}>
-                        0{index+1}
+                        fill={primaryColor || "#ef5c27"}>
+                        0{index + 1}
                     </text>
                     <Text
                         id="title-top"
@@ -122,29 +134,28 @@ class Hourbar extends React.Component {
                         height={dyData.left || 34.2}/>
 
                 </g>
-                <g className="bar-filler">
+                <g className="bar-filler" opacity={dyData.showFillers}>
                     <linearGradient
                         id={`bar-blend-gardient-${index}`}
                         gradientUnits="userSpaceOnUse"
                         x1={55.614}
-                        y1={219.242}
+                        y1={218.242}
                         x2={55.614}
-                        y2={249.2 - 33 + dyData.gradientFiller}>
-                        <stop offset={0} stopColor={data_bg_color[1] ||"#f9cc27"}/>
-                        {/* <stop offset={0.459} stopColor="#f39c2a"/> */}
+                        y2={218.2 + dyData.rectHieght}>
+                        <stop offset={0} stopColor={data_bg_color[1] || "#f9cc27"}/> {/* <stop offset={0.459} stopColor="#f39c2a"/> */}
                         <stop offset={1} stopColor={data_bg_color[0] || "#ec5e29"}/>
                     </linearGradient>
                     <rect
                         id="bar-gradent"
                         fill={`url(#bar-blend-gardient-${index})`}
                         x="52.8"
-                        y={219.2}
+                        y={218.2}   
                         width="5.6"
-                        height={dyData.gradientFiller}/>
+                        height={dyData.rectHieght}/>
                     <path
                         id="bar-bottom-curve"
                         fill={data_bg_color[0] || primaryColor}
-                        d={`M58.4 ${ 249.2 - 33 + dyData.gradientFiller}h-5.6s.1 10.1-8.3 10.8h22.3s-8.2-.8-8.4-10.8z`}/>
+                        d={`M58.4 ${ 219.5+dyData.curverStartPosition}h-5.6s.1 10.1-8.3 10.8h22.3s-8.2-.8-8.4-10.8z`}/>
                 </g>
                 <g id="bar-bottom-destination">
                     <defs>
@@ -188,7 +199,7 @@ class Hourbar extends React.Component {
                     <text
                         transform="matrix(.9445 0 0 1 46.005 291.225)"
                         className="st1 st8"
-                        fontSize={18.35}>
+                        fontSize={15.35}>
                         {barValue}
                     </text>
                     <text
@@ -238,12 +249,13 @@ class Hourbar extends React.Component {
                         fontSize="4.3651px"
                         x={0}
                         y={0}
-                        transform="matrix(.9432 0 0 1 44.78 342.444)" width={text_width}>
+                        transform="matrix(.9432 0 0 1 44.78 342.444)"
+                        width={text_width}>
                         LOREM IPSUM
                     </Text>
                     <g id="pie-graph">
-                        <circle id="_x31_" cx={55.4} cy={354} r={6.8} fill={primaryColor||"#f15b2a"}/>
-                        
+                        <circle id="_x31_" cx={55.4} cy={354} r={6.8} fill={primaryColor || "#f15b2a"}/>
+
                         <path
                             id="_x32_"
                             d="M62.2 353.9c0-3.7-2.9-6.6-6.5-6.8l-.4 6.8h6.9z"

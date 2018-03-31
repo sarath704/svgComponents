@@ -198,7 +198,7 @@ class SvgBarComponent extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="bar-container">
         <section ref="mainNode" className={this._baseClass}>
           {this.renderBar()}
         </section>

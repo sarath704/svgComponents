@@ -41,7 +41,7 @@ class HourGlassComponent extends React.Component {
             this.setState({width: this.refs.mainNode.offsetWidth, height: this.refs.mainNode.offsetHeight})
         }
     }
-    randomValues(a, pCount = 4, pMin = 20, pMax = 99) {
+    randomValues(a, pCount = 4, pMin = 25, pMax = 99) {
         let min = pMin < pMax
           ? pMin
           : pMax;
@@ -85,11 +85,20 @@ class HourGlassComponent extends React.Component {
         ];
         const primaryColor = this.state.primaryColor|| this.props.primaryColor||"#ED5E29";
         // For demo
+           //  Ie 11 check 
+    const isIE = (!!window.MSInputMethodContext && !!document.documentMode) || navigator.appVersion.indexOf("MSIE 10") !== -1 || navigator.appVersion.indexOf("MSIE 9.") !== -1;
+
+    //  Svg related
+    const preserveAspectRatio = isIE?"none" : "xMinYMin";
+    const width  =  500;
+    const height =  528;
     let randomValues = randomValues;
         return (
             <svg
                 xmlnsXlink="http://www.w3.org/1999/xlink"
-                width={500}
+                width={width}
+                height={height}
+                preserveAspectRatio = {preserveAspectRatio}
                 viewBox="0 0 360 380">
              {this
           .state
@@ -114,7 +123,7 @@ class HourGlassComponent extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="App">
                 <section ref="mainNode" className={this._baseClass}>
                     {this.renderBar()}
                     
