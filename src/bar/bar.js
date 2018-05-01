@@ -7,50 +7,61 @@ class Bar extends React.Component {
 
         this.state = {
             stops: [],
-            config: {},
-            arrowHeight:30
+            config: {}
         }
     }
     getDynamicHeight(dataValue) {
-        const value = dataValue * 2.319; // Initial height 58px for 25% ; 58/25 = 2.319 
-
+        const value = dataValue * 2.319; 
+        // Initial height 58px for 25% ; 58/25 = 2.319 
+        const initialHeight = 58;
+        const minHeight = this.props.config.minHeight || 20;
+        const minValueHeight = 40;
         // Value is generated value based on bar count  , diff is difference between initial and gen
-        return dataValue > 20
+        return dataValue > minHeight
             ? {
                 value,
-                diff: value - 58
+                diff: value - initialHeight
             }
             : {
-                value: 40,
-                diff:40-58
+                value: minValueHeight,
+                diff: minValueHeight - initialHeight
             };
     }
-
-    arrowsCount(value) {
-        const gutters= 10;
-        const availableHeight= this.getDynamicHeight(value);
-        const spaceBetweenArrows = 3;
-        const arrowHeight = this.state.arrowHeight;
-        
-        return Math.floor(availableHeight.value-gutters)/(arrowHeight+spaceBetweenArrows);
+    componentWillMount(){
+        console.log(this.props)
+        this.setState({
+            data:this.props.data
+        });
     }
-
+    arrowsCount(value,arrowHeight,spaceBetweenArrows ,availableHeight ) {
+        const gutters= 10;
+        const availableH = availableHeight || this.getDynamicHeight(value);
+        return Math.floor(availableH.value-gutters)/(arrowHeight+spaceBetweenArrows);
+    }
+  
     render() {
+        const index         = this.props.index || 0;
+        const text_width    = this.state.data.text_width || this.props.data.text_width  || 80;
+        const subTitle      = this.state.data.subTitle || this.props.data.subTitle || "TEXT HERE1";
+        const barTitle      = this.state.data.title || this.props.data.title || "INFOGRAPHICS";
+        const barValue      = this.state.data.value  || this.props.data.value;
+        const data_bg_color = this.state.data.data_bg_color || this.props.data.data_bg_color;
+        const shadowColor   = this.state.data.shadowColor || this.props.shadowColor || null;
+        const primaryColor  = this.state.data.primaryColor || this.props.data.primaryColor || "#ef5b2c";
+        const barWidth      = this.state.data.barWidth || this.props.data.barWidth || 200;
+        const arrowHeight   = this.state.data.arrowHeight || this.props.data.arrowHeight || 30;
+        const barDetailInfo = this.state.data.description || this.props.data.description;
+        const fontFamily    = this.state.fontFamily || "Oswald";
 
-        const index = this.props.index;
-        const bar = this.props.bar;
-        const targetHeight = this.getDynamicHeight(bar);
-        const text_width = this.props.text_width;
-        const barTitle = this.props.barTitle;
-        const data_bg_color = this.props.data_bg_color;
-        const shadowColor = this.props.shadowColor;
-        const upArrowsCount = this.arrowsCount(bar);
-        const spaceBetweenArrows= 3;
-        const arrowHeight = 30+spaceBetweenArrows;
-        const primaryColor = this.props.primaryColor || "#ef5b2c";
+        
+        const spaceBetweenArrows = 3;
+        const totalArrowHeight   = arrowHeight + spaceBetweenArrows;
+        const targetHeight       = this.getDynamicHeight(barValue);
+        const upArrowsCount      = this.arrowsCount(barValue,totalArrowHeight,spaceBetweenArrows,targetHeight);
+        
         return (
-            <g className="bar" transform={`translate(${ 200 * index}, 0)`} key={index}>
-
+            
+            <g className="bar" transform={`translate(${ barWidth * index}, 0)`} key={index}>
                 <linearGradient
                     id={`bar-drop-shadow-${index}`}
                     gradientUnits="userSpaceOnUse"
@@ -58,8 +69,8 @@ class Bar extends React.Component {
                     y1={611.828 - targetHeight.diff}
                     x2={310.983}
                     y2={620.752 - targetHeight.diff}>
-                    <stop offset={0} stopColor={shadowColor || "#555a61"}/>
-                    <stop offset={0.977} stopColor={shadowColor || "#555a61"} stopOpacity={0}/>
+                    <stop offset={0} stopColor = {shadowColor || "#555a61"}/>
+                    <stop offset={0.977} stopColor = {shadowColor || "#555a61"} stopOpacity={0}/>
                 </linearGradient>
 
                 <linearGradient
@@ -70,8 +81,8 @@ class Bar extends React.Component {
                     x2={399.6}
                     y2={846.844}
                     gradientTransform="matrix(-1 0 0 1 526 0)">
-                    <stop offset={0} stopColor={shadowColor || "#555a61"}/>
-                    <stop offset={1} stopColor={shadowColor || "#555a61"} stopOpacity={0}/>
+                    <stop offset={0} stopColor = {shadowColor || "#555a61"}/>
+                    <stop offset={1} stopColor = {shadowColor || "#555a61"} stopOpacity={0}/>
                 </linearGradient>
 
                 <linearGradient
@@ -81,8 +92,8 @@ class Bar extends React.Component {
                     y1={647.939}
                     x2={287.317}
                     y2={710.624}>
-                    <stop offset={0} stopColor={data_bg_color[0].stopColor || "#f27026"}/>
-                    <stop offset={0.689} stopColor={data_bg_color[1].stopColor || "#ea4924"}/>
+                    <stop offset={0} stopColor = {data_bg_color[0].stopColor || "#f27026"}/>
+                    <stop offset={0.689} stopColor = {data_bg_color[1].stopColor || "#ea4924"}/>
                 </linearGradient>
 
                 <g className="bar-shadows">
@@ -109,34 +120,25 @@ class Bar extends React.Component {
                         d="M278.528 357.133c0-4.992-4.055-9.04-9.057-9.04h-71.005v298.334h80.062V357.133z"
                         fill="url(#SVGID_6_)"/>
                     <path
-                        fill={primaryColor||"#7651A1"}
+                        fill={ primaryColor || "#7651A1"}
                         d="M251.807 567.359c-.601-2.139-.12-2.438-1.156-3.219a2.252 2.252 0 0 0-1.094-.443v-5.407a.45.45 0 0 0-.45-.45h-3.619a.44.44 0 0 0-.348.176c-.842-1.42-2.375-2.383-4.146-2.383a4.833 4.833 0 0 0 0 9.666c1.694 0 3.18-.875 4.043-2.193v1.744a.45.45 0 0 0 .45.449h2.726s.313 2.029.656 2.946c.354.943-1.145-.774-2-1.292a3.332 3.332 0 0 0-.584-.283 1.97 1.97 0 0 0-1.416-.6h-7.75c-.693 0-1.304.353-1.662.889a2.426 2.426 0 0 0-.338.464c-1.113 1.962-6.458 16.46-6.874 18.293s1.916 2.083 2.416 1.667c.5-.417 2.167-3.167 2.667-4.667.204-.612.964-2.155 1.791-3.765v4.244c0 .551.224 1.051.585 1.412-.008.07-.021.14-.021.213v19.625a2 2 0 0 0 4 0v-19.25h2.484c0 .021-.006.041-.006.063l.239 19.133a2 2 0 0 0 4 0l-.239-19.133c0-.171-.028-.334-.068-.492.47-.365.776-.93.776-1.57v-8.359c-.004-.146-.011-1.164-.029-2.414.721.629 1.91 1.107 2.433 1.531.667.542 2.463.943 2.972.584.78-.554.178-4.982-.438-7.179zm-3.433-2.841h-2.136c-.18 0-.326-.16-.326-.356v-5.184c0-.196.146-.356.326-.356h2.136c.18 0 .326.16.326.356v4.929a.551.551 0 0 0-.174.266l-.09.332c-.021.003-.04.013-.062.013z"/>
                     <Text
                         transform="matrix(.67 0 0 1 213.04 432.276)"
                         x={0}
                         y={0}
-                        className="cls-head-text" fill={primaryColor}
-                        style={{
-                        fontSize: '14px'
-                    }}
+                        className="cls-head-text" fill = {primaryColor}
+                        style= {{fontSize: '14px'}}
                         width={text_width}>
-                        {barTitle}
+                        {subTitle}
                     </Text>
 
                     <Text
                         transform="translate(209.813 450.794)"
                         x={0}
                         y={0}
-                        style={{
-                        fontSize: '4px'
-                    }}
+                        style={{fontSize: '4px'}}
                         width={65}>
-
-                        What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and type
-                        setting industry. Lorem Ipsum has been the industry's standard dummy text ever
-                        since the 1500s, when an unknown printer took a galley of type and scrambled it
-                        to make a type specimen book. It has survived not only five centuries, but also
-                        the ...
+                       {barDetailInfo}
 
                     </Text>
                 </g>
@@ -169,14 +171,14 @@ class Bar extends React.Component {
                     <text
                         transform="matrix(.695 0 0 1 131.01 693.791)"
                         fill="#f1f2f2"
-                        fontFamily="Oswald"
+                        fontFamily={fontFamily || "Oswald"}
                         fontSize={34.697}>
-                        {bar}
+                        {barValue}
                     </text>
                     <text
                         transform="matrix(.695 0 0 1 158.01 693.791)"
-                        fill="#f1f2f2"
-                        fontFamily="Oswald"
+                        fill={shadowColor|| "#f1f2f2" }
+                        fontFamily={fontFamily || "Oswald"}
                         fontSize={24.697}>
                         %
                     </text>
@@ -186,12 +188,12 @@ class Bar extends React.Component {
                             <circle
                                 className="cls-color-lite"
                                 cx={243.484}
-                                cy={677.726 - (ind * arrowHeight)}
+                                cy={677.726 - (ind * totalArrowHeight)}
                                 r={13.128}
                                 opacity={0.4}/>
                             <path
                                 className="cls-color-lite"
-                                d={`M249.252 ${ 682.177 - (ind * arrowHeight)}h-12.201l6.434-11.201z`}/>
+                                d={`M249.252 ${ 682.177 - (ind * totalArrowHeight)}h-12.201l6.434-11.201z`}/>
                         </g>
 
                     ))}
@@ -203,10 +205,10 @@ class Bar extends React.Component {
                         d="M118.528 703.094v125c0 4.971 4.055 9 9.057 9h70.881v-134h-79.938z"/>
                     <text
                         transform="matrix(0 -.67 1 0 149.846 814.98)"
-                        fill="#f27026"
-                        fontFamily="Utsaah"
-                        fontSize={22.111}>
-                        INFOGRAPHICS
+                        fill = { shadowColor|| "#f27026" }
+                        fontFamily = {fontFamily || "Oswald"}
+                        fontSize = {22.111}>
+                        {barTitle}
                     </text>
                     <path
                         d="M278.528 828.094v-125h-80.062v134h71.005c5.002 0 9.057-4.03 9.057-9z"
@@ -226,8 +228,8 @@ class Bar extends React.Component {
                                 cx={258.514}
                                 cy={816.979}
                                 r={9.969}
-                                fill="none"
-                                stroke="#fff"
+                                fill= {shadowColor || "none"}
+                                stroke= { shadowColor || "#fff"}
                                 strokeMiterlimit={10}/>
                         </g>
                     </g>

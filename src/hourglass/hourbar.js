@@ -12,7 +12,7 @@ class Hourbar extends React.Component {
         const left = (100 - barHeight) * 0.6;
         // Value is generated value based on bar count  , diff is difference between
         // initial and gen
-        if (barHeight == 0 || barHeight ==100) {
+        if (barHeight === 0 || barHeight === 100) {
             filler_connecting_curve_height = 0;
             showFillers = 0;
         }

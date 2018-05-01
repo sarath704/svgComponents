@@ -2,9 +2,10 @@ import React from "react";
 import "./style.scss";
 import Bar from "./bar";
 import BarJsonData from "./data.json"
+import configData from "./config.json"
 
 class SvgBarComponent extends React.Component {
-      /**
+  /**
       * @type {SvgCardSchema}
       */
   props;
@@ -31,9 +32,7 @@ class SvgBarComponent extends React.Component {
 
   componentWillMount() {
     this.setMax();
-    this.setState({
-      barData:BarJsonData
-    })
+    this.setState({data: BarJsonData, config: configData})
   }
 
   setMax() {
@@ -68,37 +67,50 @@ class SvgBarComponent extends React.Component {
       : pMin;
     let resultArr = [],
       randNumber;
-      let barData=this.state.barData;
+    let barData = this.state.data;
     while (pCount > 0) {
       randNumber = Math.round(min + Math.random() * (max - min));
       if (resultArr.indexOf(randNumber) === -1) {
         resultArr.push(randNumber);
-        barData[pCount-1].value=randNumber;
+        barData[pCount - 1].value = randNumber;
         pCount--;
       }
     }
-    this.setState({barData: barData});
+    this.setState({data: barData});
+  }
+  isIEBrowser(){
+   return (!!window.MSInputMethodContext && !!document.documentMode) || navigator
+    .appVersion
+    .indexOf("MSIE 10") !== -1 || navigator
+    .appVersion
+    .indexOf("MSIE 9.") !== -1
   }
   renderBar() {
 
     // Colors
-    const shadowColor   = this.state.shadowColor || this.state.data.shadowColor || "#555a61";
-    const primaryColor =  this.state.primaryColor || this.props.primaryColor || "#ef5b2c";
-    const data_bg_color = this.state.data_bg_color || this.props.data_bg_color || [{offset: 0,stopColor: "#f27026"}, {offset: 0.057,stopColor: "#ea4924"}];
-    const text_width = 80;
+    const shadowColor = this.state.config.shadowColor || this.state.data.shadowColor || null;
+    const primaryColor = this.state.config.primaryColor || this.state.data.primaryColor || "#ef5b2c";
+    const data_bg_color = this.state.config.data_bg_color || this.state.data.data_bg_color || [
+      {
+        offset: 0,
+        stopColor: "#f27026"
+      }, {
+        offset: 0.057,
+        stopColor: "#ea4924"
+      }
+    ];
+  
 
-    const barTitleDefault = "TEXT HERE";
     
-
-    // For demo
+    //  IE related
+    const isIE = this.isIEBrowser;
+    const preserveAspectRatio = isIE
+      ? "none"
+      : "xMinYMin";
+    const width = !isIE ? "100%" : 800;
+    const height = !isIE ? "100%": 800;
+      // For demo
     let randomValues = randomValues;
-    //  Ie 11 check 
-    const isIE = (!!window.MSInputMethodContext && !!document.documentMode) || navigator.appVersion.indexOf("MSIE 10") !== -1 || navigator.appVersion.indexOf("MSIE 9.") !== -1;
-
-    //  Svg related
-    const preserveAspectRatio = isIE?"none" : "xMinYMin";
-    const width  = !isIE?"100%" : 800;
-    const height = !isIE?"100%" : 800;
     return (
 
       <svg
@@ -106,7 +118,7 @@ class SvgBarComponent extends React.Component {
         width={width}
         height={height}
         viewBox="0 0 1024 1024"
-        preserveAspectRatio = {preserveAspectRatio}
+        preserveAspectRatio={preserveAspectRatio}
         xmlns="http://www.w3.org/2000/svg">
         <defs>
 
@@ -116,7 +128,7 @@ class SvgBarComponent extends React.Component {
             cy={511.616}
             r={509.751}
             gradientUnits="userSpaceOnUse">
-            <stop offset={0} stopColor="#fff"/>
+            <stop offset={0} stopColor={shadowColor || '#fff'}/>
             <stop offset={1} stopColor="#d1d3d4"/>
           </radialGradient>
           <linearGradient
@@ -126,7 +138,7 @@ class SvgBarComponent extends React.Component {
             y1={611.828}
             x2={310.983}
             y2={620.752}>
-            <stop offset={0}     stopColor={shadowColor || "#555a61"}/>
+            <stop offset={0} stopColor={shadowColor || "#555a61"}/>
             <stop offset={0.977} stopColor={shadowColor || "#555a61"} stopOpacity={0}/>
           </linearGradient>
 
@@ -137,21 +149,8 @@ class SvgBarComponent extends React.Component {
             y1={497.261}
             x2={278.528}
             y2={497.261}>
-            <stop offset={0} stopColor="#fff"/>
-            <stop offset={0.064} stopColor="#e9e8eb"/>
-          </linearGradient>
-
-  
-
-          <linearGradient
-            id="SVGID_4_"
-            gradientUnits="userSpaceOnUse"
-            x1={198.583}
-            y1={644.675}
-            x2={198.583}
-            y2={659.53}>
-            <stop offset={0} stopOpacity={0.51}/>
-            <stop offset={1} stopOpacity={0}/>
+            <stop offset={0} stopColor = { shadowColor || '#fff'}/>
+            <stop offset={0.064} stopColor={ shadowColor ||"#e9e8eb"}/>
           </linearGradient>
           <linearGradient
             id="SVGID_5_"
@@ -171,27 +170,24 @@ class SvgBarComponent extends React.Component {
             y1={770.094}
             x2={278.528}
             y2={770.094}>
-            <stop offset={0} stopColor="#fff"/>
-            <stop offset={0.064} stopColor="#e9e8eb"/>
+            <stop offset={0} stopColor = { shadowColor || '#fff'}/>
+            <stop offset={0.064} stopColor={ shadowColor || "#e9e8eb"}/>
           </linearGradient>
         </defs>
-        <path fill="url(#bg)" d="M4.662-.383h1014.982v1024H4.662z"/> {this
-          .state
-          .barData
-          .map((bar, index) => {
+        <path fill="url(#bg)" d="M4.662-.383h1014.982v1024H4.662z"/> 
+        
+        {
+          this.state.data.map((barItem, index) => {
             return (
               <Bar
-                bar={bar.value}
-                key={index}
-                index={index}
-                text_width={text_width}
-                barTitle={bar.title||barTitleDefault}
-                data_bg_color={bar.data_bg_color|| data_bg_color}
-                shadowColor={shadowColor}
-                primaryColor={bar.primaryColor||primaryColor}
+                data = {barItem}
+                key = {index}
+                index = {index}
+                config = {this.state.config}
                 ></Bar>
             )
-          })}
+          })
+        }
 
       </svg>
     )
