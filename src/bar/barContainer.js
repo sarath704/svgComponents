@@ -21,18 +21,36 @@ class SvgBarComponent extends React.Component {
         : {},
       config: props.config || {},
       max: 0,
-      width: null,
-      height: null,
+      width: '',
+      height: '',
       barData: [35, 55, 99, 40]
     }
-    this.randomValues = this
-      .randomValues
-      .bind(this);
+    
   }
-
+  onChangeWidth(event){
+    let config= this.state.config;
+    config.containerConfig.width=event.target.value;
+    this.setState({
+      config:config
+    })
+   
+ }
+ aspectChange(e){
+  this.setState({
+    aspectPresrved:e.target.value
+  })
+ }
+ onChangeHeight(event){
+  let config= this.state.config;
+  config.containerConfig.height=event.target.value;
+  this.setState({
+    config:config
+  })
+  
+}
   componentWillMount() {
     this.setMax();
-    this.setState({data: BarJsonData, config: configData})
+    this.setState({data: BarJsonData.data, config: configData,aspectPresrved:false})
   }
 
   setMax() {
@@ -44,40 +62,15 @@ class SvgBarComponent extends React.Component {
     if (this.refs.mainNode) {
       this.setState({width: this.refs.mainNode.offsetWidth, height: this.refs.mainNode.offsetHeight})
     }
+    const barDataCount  = Math.min(this.state.data.length,this.state.config.containerConfig.maxItems||9999);
+    const barRenderData  = this.state.data.slice(0,barDataCount);
+    this.setState({
+      data : this.state.data.slice(0,barDataCount),
+      config: Object.assign(this.state.config,{barCount:barRenderData.length})
+      
+    });
   }
 
-  gardientPoints(color1, color2) {
-    return [
-      {
-        offset: 0,
-        stopColor: color1
-      }, {
-        offset: 1,
-        stopColor: color2
-      }
-    ]
-  }
-
-  randomValues(a, pCount = 4, pMin = 20, pMax = 99) {
-    let min = pMin < pMax
-      ? pMin
-      : pMax;
-    let max = pMax > pMin
-      ? pMax
-      : pMin;
-    let resultArr = [],
-      randNumber;
-    let barData = this.state.data;
-    while (pCount > 0) {
-      randNumber = Math.round(min + Math.random() * (max - min));
-      if (resultArr.indexOf(randNumber) === -1) {
-        resultArr.push(randNumber);
-        barData[pCount - 1].value = randNumber;
-        pCount--;
-      }
-    }
-    this.setState({data: barData});
-  }
   isIEBrowser(){
    return (!!window.MSInputMethodContext && !!document.documentMode) || navigator
     .appVersion
@@ -88,36 +81,52 @@ class SvgBarComponent extends React.Component {
   renderBar() {
 
     // Colors
-    const shadowColor = this.state.config.shadowColor || this.state.data.shadowColor || null;
-    const primaryColor = this.state.config.primaryColor || this.state.data.primaryColor || "#ef5b2c";
-    const data_bg_color = this.state.config.data_bg_color || this.state.data.data_bg_color || [
-      {
-        offset: 0,
-        stopColor: "#f27026"
-      }, {
-        offset: 0.057,
-        stopColor: "#ea4924"
-      }
-    ];
-  
+    const shadowColor   = this.state.config.shadowColor  || this.state.data.shadowColor   || null;
+    const backgroundBg = this.state.config.containerConfig.background;
+    const showBackground =  this.state.config.containerConfig.showBackground !== undefined?this.state.config.containerConfig.showBackground: true;
+    const height  = this.state.config.containerConfig.height || 800;
+    const width   = this.state.config.containerConfig.width || 800;
+    const maxItems = this.state.config.containerConfig.maxItems;
+   let  aspectPresrved =this.state.aspectPresrved;
+    let preserveAspectRatio;
+    if(aspectPresrved){
+        if(this.state.config.containerConfig.width>this.state.config.containerConfig.width){
+        preserveAspectRatio ='xMaxYMid'
+        }
+        else if(this.state.config.containerConfig.width<this.state.config.containerConfig.width){
+        preserveAspectRatio ='xMidYMax'
+        }
+        else{
+        preserveAspectRatio= "xMaxYMid";
+        }
+    }
+    else{
+      preserveAspectRatio="none"
+    }
+// if(this.state.config.containerConfig.width>this.state.config.containerConfig.width){
+//   preserveAspectRatio ='xMaxYMid'
+// }
+// else if(this.state.config.containerConfig.width<this.state.config.containerConfig.width){
+//   preserveAspectRatio ='xMidYMax'
+// }
+// else{
+//   preserveAspectRatio= "xMaxYMid";
+// }
 
-    
     //  IE related
     const isIE = this.isIEBrowser;
-    const preserveAspectRatio = isIE
-      ? "none"
-      : "xMinYMin";
-    const width = !isIE ? "100%" : 800;
-    const height = !isIE ? "100%": 800;
+    // const preserveAspectRatio = isIE
+    //   ? "none"
+    //   : "xMinYMin";
       // For demo
-    let randomValues = randomValues;
+    // let randomValues = randomValues;
     return (
 
       <svg
         id="Layer_1"
         width={width}
         height={height}
-        viewBox="0 0 1024 1024"
+        viewBox={`0 0 ${230*maxItems} 650`}
         preserveAspectRatio={preserveAspectRatio}
         xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -129,7 +138,7 @@ class SvgBarComponent extends React.Component {
             r={509.751}
             gradientUnits="userSpaceOnUse">
             <stop offset={0} stopColor={shadowColor || '#fff'}/>
-            <stop offset={1} stopColor="#d1d3d4"/>
+            <stop offset={1} stopColor={shadowColor||"#d1d3d4"}/>
           </radialGradient>
           <linearGradient
             id="bar-drop-shadow"
@@ -174,8 +183,7 @@ class SvgBarComponent extends React.Component {
             <stop offset={0.064} stopColor={ shadowColor || "#e9e8eb"}/>
           </linearGradient>
         </defs>
-        <path fill="url(#bg)" d="M4.662-.383h1014.982v1024H4.662z"/> 
-        
+       {showBackground&&<path fill="url(#bg)" d={`M4.662-.383h${1110}.982v${650}H4.662z`}/ > }
         {
           this.state.data.map((barItem, index) => {
             return (
@@ -197,8 +205,13 @@ class SvgBarComponent extends React.Component {
       <div className="bar-container">
         <section ref="mainNode" className={this._baseClass}>
           {this.renderBar()}
+         
         </section>
-        <button onClick={this.randomValues}>Click to generate</button>
+        <div className="submit">
+        Apect ratio: <input type="checkbox" onChange={this.aspectChange.bind(this)} checked={this.state.aspectPresrved} value={this.state.aspectPresrved} />
+          Width: <input type="range" onChange={this.onChangeWidth.bind(this)} value={this.state.config.containerConfig.width} min="200" max="800"/>
+          Height: <input type="range" onChange={this.onChangeHeight.bind(this)} value={this.state.config.containerConfig.height} min="200" max="800"/>
+          </div>
       </div>
     );
   }

@@ -1,13 +1,32 @@
 import React from "react";
 import Text from "../shared/text";
+import SvgBarComponent from "./barContainer";
 class Bar extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
-            stops: [],
-            config: {}
+            colors: ["#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#ffbb78",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5",
+            "#8c564b",
+            "#c49c94",
+            "#e377c2",
+            "#f7b6d2",
+            "#7f7f7f",
+            "#c7c7c7",
+            "#bcbd22",
+            "#dbdb8d",
+            "#17becf",
+            "#9edae5"],
+            colorsList: []
         }
     }
     getDynamicHeight(dataValue) {
@@ -27,32 +46,87 @@ class Bar extends React.Component {
                 diff: minValueHeight - initialHeight
             };
     }
+    darkOrLightColor(hex, lum) {
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+        var rgb = "#", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00"+c).substr(c.length);
+        }
+    
+        return rgb;
+    }
     componentWillMount(){
-        console.log(this.props)
         this.setState({
-            data:this.props.data
+            data:this.props.data,
+            colorsList:[...this.props.config.barConfig.barColors,...this.state.colors],
+            gradientColors:this.props.config.barConfig.gradientColors ||[]
         });
+        
     }
     arrowsCount(value,arrowHeight,spaceBetweenArrows ,availableHeight ) {
         const gutters= 10;
         const availableH = availableHeight || this.getDynamicHeight(value);
         return Math.floor(availableH.value-gutters)/(arrowHeight+spaceBetweenArrows);
     }
-  
-    render() {
-        const index         = this.props.index || 0;
-        const text_width    = this.state.data.text_width || this.props.data.text_width  || 80;
-        const subTitle      = this.state.data.subTitle || this.props.data.subTitle || "TEXT HERE1";
-        const barTitle      = this.state.data.title || this.props.data.title || "INFOGRAPHICS";
-        const barValue      = this.state.data.value  || this.props.data.value;
-        const data_bg_color = this.state.data.data_bg_color || this.props.data.data_bg_color;
-        const shadowColor   = this.state.data.shadowColor || this.props.shadowColor || null;
-        const primaryColor  = this.state.data.primaryColor || this.props.data.primaryColor || "#ef5b2c";
-        const barWidth      = this.state.data.barWidth || this.props.data.barWidth || 200;
-        const arrowHeight   = this.state.data.arrowHeight || this.props.data.arrowHeight || 30;
-        const barDetailInfo = this.state.data.description || this.props.data.description;
-        const fontFamily    = this.state.fontFamily || "Oswald";
+    getColors(index,isGradient){
+        const primaryColor  = this.state.colorsList[index]||this.state.colorsList[0];
+        const gradeintList = this.state.gradientColors;
+        let gradient=[];
+        if(isGradient){
+            let gradientColor;
+            if(gradeintList[index]){
+                gradientColor=gradeintList[index]
+            }
+            else{
+             gradientColor = this.darkOrLightColor (primaryColor,-0.3);
+            if(gradientColor === primaryColor){
+                gradientColor = this.darkOrLightColor (primaryColor,0.2)
+            }
+        }
+            gradient[0]= primaryColor;
+            gradient[1]= gradientColor;
 
+        }
+        else{
+            gradient=[primaryColor,primaryColor]
+        }
+        return {primaryColor:primaryColor,gradientColors:gradient}
+    }
+    getBarWidth(){
+        
+        const width    = Math.min(this.props.config.containerConfig.width,this.props.config.containerConfig.height);
+        const maxItems = this.props.config.barCount||this.props.config.containerConfig.maxItems;
+        const maxWidth = Math.min(200,Math.round(1110/maxItems));
+        const  scale   = Math.min(1,maxWidth/200 );
+    return {width:Math.min(200,Math.round(1110/maxItems)),scale:scale}
+    }
+    render() {
+      
+        
+        const index         = this.props.index || 0;
+        const isGradient    = this.props.config.barConfig.showGradient||false;
+        
+        const barColor      = this.getColors(index,isGradient)
+        const text_width    = 80;
+        const subTitle      = this.props.data.title || "TEXT HERE1";
+        const barTitle      = this.props.data.subTitle || this.state.data.subTitle || "INFOGRAPHICS";
+        const barValue      = this.props.data.value  || this.state.data.value;
+        const barWidth      = this.getBarWidth().width;
+        const scaleBar      = this.getBarWidth().scale || 1;
+        const barDetailInfo = this.props.data.description || this.state.data.description;
+        const fontFamily    = this.props.config.fontFamily || "Oswald";
+        const shadowColor   = this.props.config.shadowColor || this.props.config.shadowColor ||  "#555a61";
+        
+        const arrowHeight   = 30;
+        const primaryColor  = barColor.primaryColor;
+        const data_bg_color = barColor.gradientColors;
+        const containerHeight = this.props.config.containerConfig.maxHeight;
         
         const spaceBetweenArrows = 3;
         const totalArrowHeight   = arrowHeight + spaceBetweenArrows;
@@ -60,8 +134,7 @@ class Bar extends React.Component {
         const upArrowsCount      = this.arrowsCount(barValue,totalArrowHeight,spaceBetweenArrows,targetHeight);
         
         return (
-            
-            <g className="bar" transform={`translate(${ barWidth * index}, 0)`} key={index}>
+            <g className="bar" transform={`translate(${ 200 * index}, -50),scale(0.9,0.8)`} key={index}>
                 <linearGradient
                     id={`bar-drop-shadow-${index}`}
                     gradientUnits="userSpaceOnUse"
@@ -92,8 +165,8 @@ class Bar extends React.Component {
                     y1={647.939}
                     x2={287.317}
                     y2={710.624}>
-                    <stop offset={0} stopColor = {data_bg_color[0].stopColor || "#f27026"}/>
-                    <stop offset={0.689} stopColor = {data_bg_color[1].stopColor || "#ea4924"}/>
+                    <stop offset={0} stopColor = {data_bg_color[0] || "#f27026"}/>
+                    <stop offset={0.689} stopColor = {data_bg_color[1] || "#ea4924"}/>
                 </linearGradient>
 
                 <g className="bar-shadows">
@@ -177,7 +250,7 @@ class Bar extends React.Component {
                     </text>
                     <text
                         transform="matrix(.695 0 0 1 158.01 693.791)"
-                        fill={shadowColor|| "#f1f2f2" }
+                        fill="#f1f2f2"
                         fontFamily={fontFamily || "Oswald"}
                         fontSize={24.697}>
                         %
@@ -205,7 +278,7 @@ class Bar extends React.Component {
                         d="M118.528 703.094v125c0 4.971 4.055 9 9.057 9h70.881v-134h-79.938z"/>
                     <text
                         transform="matrix(0 -.67 1 0 149.846 814.98)"
-                        fill = { shadowColor|| "#f27026" }
+                        fill = { primaryColor|| "#f27026" }
                         fontFamily = {fontFamily || "Oswald"}
                         fontSize = {22.111}>
                         {barTitle}
@@ -228,14 +301,15 @@ class Bar extends React.Component {
                                 cx={258.514}
                                 cy={816.979}
                                 r={9.969}
-                                fill= {shadowColor || "none"}
-                                stroke= { shadowColor || "#fff"}
+                                fill= {primaryColor || "none"}
+                                stroke= { primaryColor || "#fff"}
                                 strokeMiterlimit={10}/>
                         </g>
                     </g>
                 </g>
 
             </g>
+
         )
     }
 }

@@ -5,7 +5,7 @@
 	"height": 500,
 	"showLastUpdate": false,
 	"showExport": true,
-
+	"minHeight": 10,
 	"groupedActions": [
 		"REFRESH",
 		"PRINT"
@@ -19,5 +19,43 @@
 		"precision": 0,
 		"suffix": "%",
 		"color": "red"
+	},
+	"containerConfig": {
+		"showBackground": true,
+		"height": 300,
+		"width": 400,
+		"gradientType": "none",
+		"gradientColors": [],
+		"maxItems": 4,
+		"background":"#555a61"
+	},
+	"barConfig": {
+		"barType": "SVG_BAR_HOURGLASS",
+		"barColors": ["#1f77b4",
+			"#9467bd",
+			"#ff9896",
+			"#ffbb78",
+			"#d62728",
+			"#aec7e8",
+			"#ff7f0e",
+			"#2ca02c",
+			"#98df8a",
+			"#c5b0d5",
+			"#8c564b",
+			"#c49c94",
+			"#e377c2",
+			"#f7b6d2",
+			"#7f7f7f",
+			"#c7c7c7",
+			"#bcbd22",
+			"#dbdb8d",
+			"#17becf",
+			"#9edae5"
+		],
+		"gradientColors":["#e377c2",
+			"#f7b6d2",
+			"#7f7f7f"],
+		"showGradient": true,
+		"minWidth": 120
 	}
 }
