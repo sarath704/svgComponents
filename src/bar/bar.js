@@ -61,6 +61,15 @@ class Bar extends React.Component {
     
         return rgb;
     }
+    getBarCoorrdinates(){
+        // console.log(this.refs.bar.getBoundingClientRect());
+        console.log(this.refs.bar.getBBox())
+    }
+    // componentDidMount() {
+    //     if (this.refs.bar) {
+    //       this.getBarCoorrdinates();
+    //     }
+    // }
     componentWillMount(){
         this.setState({
             data:this.props.data,
@@ -101,14 +110,20 @@ class Bar extends React.Component {
     getBarWidth(){
         
         const width    = Math.min(this.props.config.containerConfig.width,this.props.config.containerConfig.height);
+     
         const maxItems = this.props.config.barCount||this.props.config.containerConfig.maxItems;
-        const maxWidth = Math.min(200,Math.round(1110/maxItems));
+        let viewBoxWidth= (maxItems*200);
+        const maxWidth = Math.min(200,Math.round(this.props.config.containerConfig.width/maxItems));
         const  scale   = Math.min(1,maxWidth/200 );
-    return {width:Math.min(200,Math.round(1110/maxItems)),scale:scale}
+        
+        return {width:Math.min(210,viewBoxWidth/maxItems),scale:maxItems>4?6/maxItems:1.2}
+        // return {width:maxItems,scale:1/maxItems}
     }
     render() {
       
-        
+        if (this.refs.bar) {
+            this.getBarCoorrdinates();
+          }
         const index         = this.props.index || 0;
         const isGradient    = this.props.config.barConfig.showGradient||false;
         
@@ -132,9 +147,9 @@ class Bar extends React.Component {
         const totalArrowHeight   = arrowHeight + spaceBetweenArrows;
         const targetHeight       = this.getDynamicHeight(barValue);
         const upArrowsCount      = this.arrowsCount(barValue,totalArrowHeight,spaceBetweenArrows,targetHeight);
-        
+       
         return (
-            <g className="bar" transform={`translate(${ 200 * index}, -50),scale(0.9,0.8)`} key={index}>
+            <g className="bar" ref="bar" transform={`translate(${ (barWidth * index)+10}, 0),scale(${scaleBar,scaleBar})`} key={index}>
                 <linearGradient
                     id={`bar-drop-shadow-${index}`}
                     gradientUnits="userSpaceOnUse"

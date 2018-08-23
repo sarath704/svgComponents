@@ -36,8 +36,11 @@ class SvgBarComponent extends React.Component {
    
  }
  aspectChange(e){
+  let newValue = (this.state.aspectPresrved === "on" || this.state.aspectPresrved === true) ? false : true;
+
+
   this.setState({
-    aspectPresrved:e.target.value
+    aspectPresrved:newValue
   })
  }
  onChangeHeight(event){
@@ -48,9 +51,17 @@ class SvgBarComponent extends React.Component {
   })
   
 }
+onChangeCount(event){
+  let config= this.state.config;
+  config.containerConfig.maxItems=event.target.value;
+  this.setState({
+    data : this.state.data.slice(0,event.target.value),
+    config:config
+  })
+}
   componentWillMount() {
     this.setMax();
-    this.setState({data: BarJsonData.data, config: configData,aspectPresrved:false})
+    this.setState({data: BarJsonData.data, config: configData,aspectPresrved:false});
   }
 
   setMax() {
@@ -70,7 +81,15 @@ class SvgBarComponent extends React.Component {
       
     });
   }
-
+getBarcount(){
+  const barDataCount  = Math.min(this.state.data.length,this.state.config.containerConfig.maxItems||9999);
+    const barRenderData  = this.state.data.slice(0,barDataCount);
+    this.setState({
+      data : this.state.data.slice(0,barDataCount),
+      config: Object.assign(this.state.config,{barCount:barRenderData.length})
+      
+    });
+}
   isIEBrowser(){
    return (!!window.MSInputMethodContext && !!document.documentMode) || navigator
     .appVersion
@@ -82,19 +101,20 @@ class SvgBarComponent extends React.Component {
 
     // Colors
     const shadowColor   = this.state.config.shadowColor  || this.state.data.shadowColor   || null;
-    const backgroundBg = this.state.config.containerConfig.background;
+    // const backgroundBg = this.state.config.containerConfig.background;
     const showBackground =  this.state.config.containerConfig.showBackground !== undefined?this.state.config.containerConfig.showBackground: true;
     const height  = this.state.config.containerConfig.height || 800;
     const width   = this.state.config.containerConfig.width || 800;
     const maxItems = this.state.config.containerConfig.maxItems;
-   let  aspectPresrved =this.state.aspectPresrved;
+    let  aspectPresrved =this.state.aspectPresrved || false;
     let preserveAspectRatio;
+    let viewBoxWidth= (maxItems*200)+100;
     if(aspectPresrved){
         if(this.state.config.containerConfig.width>this.state.config.containerConfig.width){
-        preserveAspectRatio ='xMaxYMid'
+        preserveAspectRatio ='xMaxYMax'
         }
         else if(this.state.config.containerConfig.width<this.state.config.containerConfig.width){
-        preserveAspectRatio ='xMidYMax'
+        preserveAspectRatio ='xMaxYMax'
         }
         else{
         preserveAspectRatio= "xMaxYMid";
@@ -114,7 +134,7 @@ class SvgBarComponent extends React.Component {
 // }
 
     //  IE related
-    const isIE = this.isIEBrowser;
+    // const isIE = this.isIEBrowser;
     // const preserveAspectRatio = isIE
     //   ? "none"
     //   : "xMinYMin";
@@ -126,9 +146,9 @@ class SvgBarComponent extends React.Component {
         id="Layer_1"
         width={width}
         height={height}
-        viewBox={`0 0 ${230*maxItems} 650`}
-        preserveAspectRatio={preserveAspectRatio}
-        xmlns="http://www.w3.org/2000/svg">
+        // viewBox={`0 0 ${1024} ${1024}`}
+        preserveAspectRatio={"none"}
+        xmlns="http://www.w3.org/2000/svg" ref="barcontainer">
         <defs>
 
           <radialGradient
@@ -183,7 +203,9 @@ class SvgBarComponent extends React.Component {
             <stop offset={0.064} stopColor={ shadowColor || "#e9e8eb"}/>
           </linearGradient>
         </defs>
-       {showBackground&&<path fill="url(#bg)" d={`M4.662-.383h${1110}.982v${650}H4.662z`}/ > }
+        
+       {showBackground&&<path fill="url(#bg)" d={`M4.662-.383h${width}.0v${height}H4.662z`}/ > }
+       <svg width="100%" x="0%" y="0" height="100%"  preserveAspectRatio={"xMidYMin meet"} viewBox={`50 50 ${viewBoxWidth>1024?viewBoxWidth:1024} ${viewBoxWidth>1024?viewBoxWidth:1024}`}>
         {
           this.state.data.map((barItem, index) => {
             return (
@@ -196,6 +218,7 @@ class SvgBarComponent extends React.Component {
             )
           })
         }
+        </svg>
 
       </svg>
     )
@@ -208,9 +231,10 @@ class SvgBarComponent extends React.Component {
          
         </section>
         <div className="submit">
-        Apect ratio: <input type="checkbox" onChange={this.aspectChange.bind(this)} checked={this.state.aspectPresrved} value={this.state.aspectPresrved} />
-          Width: <input type="range" onChange={this.onChangeWidth.bind(this)} value={this.state.config.containerConfig.width} min="200" max="800"/>
-          Height: <input type="range" onChange={this.onChangeHeight.bind(this)} value={this.state.config.containerConfig.height} min="200" max="800"/>
+        {this.state.aspectPresrved}     
+          Width: <input type="range" onChange={this.onChangeWidth.bind(this)} value={this.state.config.containerConfig.width} min="200" max="1024"/>
+          Height: <input type="range" onChange={this.onChangeHeight.bind(this)} value={this.state.config.containerConfig.height} min="200" max="680"/>
+          Count: <input type="range" onChange={this.onChangeCount.bind(this)} value={this.state.config.containerConfig.maxItems} min="1" max="8"/>
           </div>
       </div>
     );

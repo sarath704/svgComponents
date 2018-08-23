@@ -26,7 +26,7 @@
 		"width": 400,
 		"gradientType": "none",
 		"gradientColors": [],
-		"maxItems": 4,
+		"maxItems": 2,
 		"background":"#555a61"
 	},
 	"barConfig": {
@@ -52,9 +52,6 @@
 			"#17becf",
 			"#9edae5"
 		],
-		"gradientColors":["#e377c2",
-			"#f7b6d2",
-			"#7f7f7f"],
 		"showGradient": true,
 		"minWidth": 120
 	}
